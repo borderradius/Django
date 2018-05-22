@@ -2,6 +2,7 @@ from django.shortcuts import redirect,get_object_or_404, render
 from .models import Post
 from django.utils import timezone
 from .forms import PostForm
+from django.contrib.auth.decorators import login_required
 
 def post_list(request):
     qs = Post.objects.all()
@@ -23,6 +24,7 @@ def post_detail(request, pk):
         'post': post,
     })
 
+@login_required
 def post_new(request):
     # request.POST, request.FILES 에 정보담김
 
@@ -41,6 +43,7 @@ def post_new(request):
         'form': form,
     })
 
+@login_required
 def post_edit(request, pk):
     post = get_object_or_404(Post, pk=pk)
 
@@ -59,6 +62,7 @@ def post_edit(request, pk):
         'form':form,
     })  
 
+@login_required
 def post_draft_list(request):
     posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
 
@@ -66,11 +70,13 @@ def post_draft_list(request):
         'posts': posts
     })  
 
+@login_required
 def post_publish(request,pk):
     post = get_object_or_404(Post, pk=pk)
     post.publish()
     return redirect('post_detail', pk=pk)
 
+@login_required
 def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
