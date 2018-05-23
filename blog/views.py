@@ -4,6 +4,7 @@ from django.utils import timezone
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
 
+
 def post_list(request):
     qs = Post.objects.all()
     qs = qs.filter(published_date__lte=timezone.now())
@@ -81,3 +82,4 @@ def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
     return redirect('post_list')
+
